@@ -1,7 +1,7 @@
 import java.util.Scanner;
 import java.util.random.*;
 
-public class RafaelKrassota_CampoMinado {
+public class campoMinado {
 
     public static void limparMatrizBool(boolean[][] matrizBool) {
         for (int i = 0; i < matrizBool.length; i++) {
@@ -11,7 +11,24 @@ public class RafaelKrassota_CampoMinado {
         }
     }
 
-    //public static void imprimirCampoMinado(int[][] campoMinado)
+    public static void definirCadrados(char[][] cadrados) {
+        for (int i = 0; i < cadrados[0].length; i++) {
+            if(i % 5 == 0) {
+                //cadrados[0][i] = '*\n';
+            }else {
+                cadrados[0][i] = '*';
+            }
+        }
+        for (int i = 1; i <= cadrados.length; i++) {
+            for (int j = 0; j < cadrados[0].length; j++) {
+                
+            }
+        }
+    }
+
+    public static void imprimirCampoMinado(char[][] cadrados) {
+
+    }
 
     public static void definirBombas(boolean[][] matrizBool, int qtdBombas) {
         for(int i = 0; i < qtdBombas; i++) {
@@ -27,8 +44,8 @@ public class RafaelKrassota_CampoMinado {
     }
 
     public static void main(String[] args) {
-        boolean[][] bombas = new boolean[8][8];
+        boolean[][] bombas = new boolean[9][9];
         int qtdBombas;
-
+        char[][] cadrados = new char[10][15];
     }
 }
