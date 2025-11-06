@@ -1,12 +1,19 @@
 import java.util.Scanner;
-import java.util.random.*;
 
 public class campoMinado {
 
-    public static void limparMatrizBool(boolean[][] matrizBool) {
-        for (int i = 0; i < matrizBool.length; i++) {
-            for (int j = 0; j < matrizBool[0].length; j++) {
-                matrizBool[i][j] = false;
+    public static void criarCelulas(Celula[][] campo) {
+        for (int i = 0; i < campo.length; i++) {
+            for (int j = 0; j < campo[0].length; j++) {
+                campo[i][j] = new Celula();
+            }
+        }
+    }
+
+    public static void limparBombas(Celula[][] campoMinado) {
+        for (int i = 0; i < campoMinado.length; i++) {
+            for (int j = 0; j < campoMinado[0].length; j++) {
+                campoMinado[i][j].bomba = false;
             }
         }
     }
@@ -28,19 +35,55 @@ public class campoMinado {
         }
     }
 
-    public static void definirMatrizInt() {
-
+    public static void definirBombasProximas(Celula[][] campo) {
+        int deslocamentoI;
+        int deslocamentoJ;
+        int bombasAoRedor;
+        for (int i = 0; i < campo.length; i++) {
+            for (int j = 0; j < campo[0].length; j++) {
+                if(campo[i][j].bomba) {
+                    continue;
+                }
+                bombasAoRedor = 0;
+                for (int x = -1; x <= 1; x++) {
+                    for (int y = -1; y <= 1; y++) {
+                        if (x == 0 && y == 0) {
+                            continue;
+                        }
+                        deslocamentoI = i + x;
+                        deslocamentoJ = y + j;
+                        if ((deslocamentoI >= 0 && deslocamentoI < campo.length) &&
+                            (deslocamentoJ >= 0 && deslocamentoJ < campo[0].length)) {
+                            if (campo[deslocamentoI][deslocamentoJ].bomba) {
+                                bombasAoRedor++;
+                            }
+                        }
+                    }
+                    
+                }
+                campo[i][j].bombasProximas = bombasAoRedor;
+            }
+        }
     }
 
     public static void main(String[] args) {
         Celula[][] campoMinado = new Celula[8][12];
         int qtdBombas = 12;
 
+        criarCelulas(campoMinado);
+        limparBombas(campoMinado);
         definirBombas(campoMinado, qtdBombas);
+        definirBombasProximas(campoMinado);
 
         for (int i = 0; i < campoMinado.length; i++) {
             for (int j = 0; j < campoMinado[0].length; j++) {
                 System.out.printf("%b\t", campoMinado[i][j].bomba);
+            }
+            System.out.println();
+        }
+        for (int i = 0; i < campoMinado.length; i++) {
+            for (int j = 0; j < campoMinado[0].length; j++) {
+                System.out.printf("%d\t", campoMinado[i][j].bombasProximas);
             }
             System.out.println();
         }
