@@ -18,8 +18,21 @@ public class campoMinado {
         }
     }
 
-    public static void imprimirCampoMinado() {
-
+    public static void imprimirCampoMinado(Celula[][] campo) { 
+        for (int i = 0; i < 33; i++) {
+            System.out.print("_");
+        }
+        System.out.println();
+        for (int i = 0; i < campo.length; i++) {
+            for (int j = 0; j < campo[0].length; j++) {
+                if(campo[i][j].foiAberto == false) {
+                    System.out.print("| * ");
+                }else {
+                    System.out.printf("| %d ", campo[i][j].bombasProximas);
+                }
+            }
+            System.out.println("|");
+        }
     }
 
     public static void definirBombas(Celula[][] campoMinado, int qtdBombas) {
@@ -42,6 +55,7 @@ public class campoMinado {
         for (int i = 0; i < campo.length; i++) {
             for (int j = 0; j < campo[0].length; j++) {
                 if(campo[i][j].bomba) {
+                    bombasAoRedor = 0;
                     continue;
                 }
                 bombasAoRedor = 0;
@@ -67,7 +81,7 @@ public class campoMinado {
     }
 
     public static void main(String[] args) {
-        Celula[][] campoMinado = new Celula[8][12];
+        Celula[][] campoMinado = new Celula[12][8];
         int qtdBombas = 12;
 
         criarCelulas(campoMinado);
@@ -87,6 +101,7 @@ public class campoMinado {
             }
             System.out.println();
         }
+        imprimirCampoMinado(campoMinado);
     }
 }
 
