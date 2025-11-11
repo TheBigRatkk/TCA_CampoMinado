@@ -31,6 +31,11 @@ public class MaisCores {
         System.out.print("\u001b[0m");
     }
 
+    public static void setCombinacoes(int corTexto, int corFundo) {
+        MaisCores.setCor256(corTexto);
+        MaisCores.setCorFundo256(corFundo);
+    }
+
     // Testando as cores
 
     public static void main(String[] args) {
