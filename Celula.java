@@ -20,39 +20,6 @@ public class Celula {
         }
     }
 
-    private static void imprimirTopoCampoMinado(Celula[][] campo) {
-        int numUnderLines = (campo[0].length * 4) - 1;
-        System.out.print(" ");
-        for (int i = 0; i < numUnderLines; i++) {
-            System.out.print("_");
-        }
-        System.out.println();
-    }
-
-    private static void imprimirFinalCampoMinado(Celula[][] campo) {
-        int numTracos = (campo[0].length * 4) - 1;
-        System.out.print(" ");
-        for (int i = 0; i < numTracos; i++) {
-            System.out.print("¨");
-        }
-        System.out.println();
-    }
-
-    public static void imprimirCampoMinado(Celula[][] campo) {
-        imprimirTopoCampoMinado(campo);
-        for (int i = 0; i < campo.length; i++) {
-            for (int j = 0; j < campo[0].length; j++) {
-                if(campo[i][j].foiAberto == false) {
-                    System.out.print("| * ");
-                }else {
-                    System.out.printf("| %d ", campo[i][j].bombasProximas);
-                }
-            }
-            System.out.println("|");
-        }
-        imprimirFinalCampoMinado(campo);
-    }
-
     public static void definirBombas(Celula[][] campoMinado, int qtdBombas) {
         for(int i = 0; i < qtdBombas; i++) {
             while(true) {

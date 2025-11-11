@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class campoMinado {
+public class CampoMinado {
 
     public static Scanner TECLADO = new Scanner(System.in);
 
@@ -8,8 +8,12 @@ public class campoMinado {
         return TECLADO.nextInt();
     }
 
-    public static void novoJogo() {
-
+    public static void novoJogo(int qtdBombas, Celula[][] campo) {
+        Celula.criarCelulas(campo);
+        Celula.limparBombas(campo);
+        Celula.definirBombas(campo, qtdBombas);;
+        Celula.definirBombasProximas(campo);
+        Imprimir.campoMinado(campo);
     }
 
     public static void opcoes() {
@@ -25,13 +29,12 @@ public class campoMinado {
         int qtdBombas = 12;
         int opcao = 0;
 
-        imprimir.menuInicial();
-
         do {
+            Imprimir.menuInicial();
             opcao = lerInt();
             switch(opcao) {
                 case 1:
-                    novoJogo();
+                    novoJogo(qtdBombas, campoMinado);
                     break;
                 case 2:
                     opcoes();
