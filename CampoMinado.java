@@ -1,8 +1,30 @@
 import java.util.Scanner;
+import com.sun.jna.Library;
+import com.sun.jna.Native;
 
 public class CampoMinado {
 
     public static Scanner TECLADO = new Scanner(System.in);
+
+    public interface Crt extends Library {
+        Crt INSTANCE = Native.load("msvcrt", Crt.class);
+        
+        int _kbhit();
+        int _getch();
+    }
+
+    public static boolean pressionouTecla() {
+        return Crt.INSTANCE._kbhit() != 0;
+    } 
+
+    public static int obtemTeclaPressionada(){
+        return Crt.INSTANCE._getch();
+    }
+
+    public static void limparConsole() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
 
     public static int lerInt() {
         return TECLADO.nextInt();
@@ -13,7 +35,23 @@ public class CampoMinado {
         Celula.limparBombas(campo);
         Celula.definirBombas(campo, qtdBombas);;
         Celula.definirBombasProximas(campo);
-        Imprimir.campoMinado(campo);
+        int xInicial = (campo.length + 1) / 2;
+        int yInicial = (campo[0].length + 1) / 2;
+        while(true) {
+            if (pressionouTecla()) {
+                int ch = obtemTeclaPressionada();
+
+                switch (ch) {
+                    case 'w':
+                    case 'W':
+                        
+                        break;
+                
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     public static void opcoes() {
@@ -25,7 +63,7 @@ public class CampoMinado {
     }
 
     public static void main(String[] args) {
-        Celula[][] campoMinado = new Celula[24][16];
+        Celula[][] campoMinado = new Celula[25][15];
         int qtdBombas = 12;
         int opcao = 0;
 

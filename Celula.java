@@ -3,6 +3,7 @@ public class Celula {
     boolean bomba;
     boolean bandeira;
     boolean foiAberto;
+    boolean estaSelecionado;
 
     public static void criarCelulas(Celula[][] campo) {
         for (int i = 0; i < campo.length; i++) {

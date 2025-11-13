@@ -112,26 +112,24 @@ public class Imprimir {
         System.out.println();
     }
 
-    private static void imprimirColunas(Celula[][] campo) {
-        char[] alfabeto = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',};
-        for (int i = 0; i < campo.length; i++) {
-            System.out.printf("| %c", alfabeto[i]);
-        }
-    }
-
     public static void campoMinado(Celula[][] campo) {
-        imprimirColunas(campo);
+        setCor256(28);
         imprimirTopoCampoMinado(campo);
         for (int i = 0; i < campo.length; i++) {
             for (int j = 0; j < campo[0].length; j++) {
+                setCombinacoes(46, 28);
                 if(campo[i][j].foiAberto == false) {
                     System.out.print("| * ");
                 }else {
                     System.out.printf("| %d ", campo[i][j].bombasProximas);
                 }
             }
-            System.out.println("|");
+            System.out.print("|");
+            resetColor();
+            System.out.println();
         }
+        resetColor();
+        setCor256(28);
         imprimirFinalCampoMinado(campo);
     }
 }
