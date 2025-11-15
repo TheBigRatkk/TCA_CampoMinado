@@ -30,13 +30,31 @@ public class CampoMinado {
         return TECLADO.nextInt();
     }
 
+    public static int verificarX(int x, Celula[][] campo) {
+        if(x > campo.length) {
+            x--;
+        }else if(x < 0) {
+            x++;
+        }
+        return x;
+    }
+
+    public static int verificarY(int y, Celula[][] campo) {
+        if(y > campo[0].length) {
+            y--;
+        }else if(y < 0) {
+            y++;
+        }
+        return y;
+    }
+
     public static void novoJogo(int qtdBombas, Celula[][] campo) {
         Celula.criarCelulas(campo);
         Celula.limparBombas(campo);
         Celula.definirBombas(campo, qtdBombas);;
         Celula.definirBombasProximas(campo);
-        int xInicial = (campo.length + 1) / 2;
-        int yInicial = (campo[0].length + 1) / 2;
+        int xCelulaAtual = (campo.length + 1) / 2;
+        int yCelulaAtual = (campo[0].length + 1) / 2;
         while(true) {
             if (pressionouTecla()) {
                 int ch = obtemTeclaPressionada();
@@ -44,7 +62,11 @@ public class CampoMinado {
                 switch (ch) {
                     case 'w':
                     case 'W':
-                        
+                        yCelulaAtual += 1;
+                        yCelulaAtual = verificarY(yCelulaAtual, campo);
+                        campo[xCelulaAtual][yCelulaAtual].estaSelecionado = true;
+                        limparConsole();
+                        Imprimir.campoMinado(campo);
                         break;
                 
                     default:

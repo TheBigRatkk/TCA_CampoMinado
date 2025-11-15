@@ -119,7 +119,13 @@ public class Imprimir {
             for (int j = 0; j < campo[0].length; j++) {
                 setCombinacoes(46, 28);
                 if(campo[i][j].foiAberto == false) {
-                    System.out.print("| * ");
+                    if(campo[i][j].estaSelecionado == true) {
+                        setCor256(196);
+                        System.out.print("| * ");
+                        setCor256(46);
+                    }else {
+                        System.out.print("| * ");
+                    }
                 }else {
                     System.out.printf("| %d ", campo[i][j].bombasProximas);
                 }
