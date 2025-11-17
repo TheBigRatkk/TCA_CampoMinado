@@ -117,12 +117,13 @@ public class Imprimir {
         imprimirTopoCampoMinado(campo);
         for (int i = 0; i < campo.length; i++) {
             for (int j = 0; j < campo[0].length; j++) {
-                setCombinacoes(46, 28);
+                setCor256(106);
                 if(campo[i][j].foiAberto == false) {
                     if(campo[i][j].estaSelecionado == true) {
-                        setCor256(196);
-                        System.out.print("| * ");
-                        setCor256(46);
+                        System.out.print("| ");
+                        setCor256(7);
+                        System.out.print("* ");
+                        setCor256(106);
                     }else {
                         System.out.print("| * ");
                     }

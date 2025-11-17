@@ -30,20 +30,20 @@ public class CampoMinado {
         return TECLADO.nextInt();
     }
 
-    public static int verificarX(int x, Celula[][] campo) {
-        if(x > campo.length) {
-            x--;
+    public static int verificarY(int x, Celula[][] campo) {
+        if(x > campo.length - 1) {
+            x = campo.length - 1;
         }else if(x < 0) {
-            x++;
+            x = 0;
         }
         return x;
     }
 
-    public static int verificarY(int y, Celula[][] campo) {
-        if(y > campo[0].length) {
-            y--;
+    public static int verificarX(int y, Celula[][] campo) {
+        if(y >= campo[0].length - 1) {
+            y = campo[0].length - 1;
         }else if(y < 0) {
-            y++;
+            y = 0;
         }
         return y;
     }
@@ -53,8 +53,10 @@ public class CampoMinado {
         Celula.limparBombas(campo);
         Celula.definirBombas(campo, qtdBombas);;
         Celula.definirBombasProximas(campo);
-        int xCelulaAtual = (campo.length + 1) / 2;
-        int yCelulaAtual = (campo[0].length + 1) / 2;
+        int yCelulaAtual = (campo.length + 1) / 2;
+        int xCelulaAtual = (campo[0].length + 1) / 2;
+        limparConsole();
+        Imprimir.campoMinado(campo);
         while(true) {
             if (pressionouTecla()) {
                 int ch = obtemTeclaPressionada();
@@ -62,11 +64,21 @@ public class CampoMinado {
                 switch (ch) {
                     case 'w':
                     case 'W':
-                        yCelulaAtual += 1;
-                        yCelulaAtual = verificarY(yCelulaAtual, campo);
+                        xCelulaAtual -= 1;
+                        xCelulaAtual = verificarX(xCelulaAtual, campo);
                         campo[xCelulaAtual][yCelulaAtual].estaSelecionado = true;
                         limparConsole();
                         Imprimir.campoMinado(campo);
+                        campo[xCelulaAtual][yCelulaAtual].estaSelecionado = false;
+                        break;
+                    case 's':
+                    case 'S':
+                        xCelulaAtual += 1;
+                        xCelulaAtual = verificarX(xCelulaAtual, campo);
+                        campo[xCelulaAtual][yCelulaAtual].estaSelecionado = true;
+                        limparConsole();
+                        Imprimir.campoMinado(campo);
+                        campo[xCelulaAtual][yCelulaAtual].estaSelecionado = false;
                         break;
                 
                     default:
@@ -105,9 +117,7 @@ public class CampoMinado {
                 default:
                     continue;
             }
-        }while(!(opcao == 1 ||
-               opcao == 2 ||
-               opcao == 3));
+        }while(opcao < 1 || opcao > 3);
         
     }
 }
