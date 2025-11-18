@@ -113,7 +113,7 @@ public class Imprimir {
     }
 
     public static void campoMinado(Celula[][] campo) {
-        setCor256(28);
+        setCor256(106);
         imprimirTopoCampoMinado(campo);
         for (int i = 0; i < campo.length; i++) {
             for (int j = 0; j < campo[0].length; j++) {
@@ -127,8 +127,10 @@ public class Imprimir {
                     }else {
                         System.out.print("| * ");
                     }
-                }else {
+                }else if(campo[i][j].foiAberto == true) {
                     System.out.printf("| %d ", campo[i][j].bombasProximas);
+                }else if(campo[i][j].bandeira == true) {
+                    System.out.print("| P ");
                 }
             }
             System.out.print("|");
@@ -136,7 +138,7 @@ public class Imprimir {
             System.out.println();
         }
         resetColor();
-        setCor256(28);
+        setCor256(106);
         imprimirFinalCampoMinado(campo);
     }
 }

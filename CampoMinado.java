@@ -30,7 +30,7 @@ public class CampoMinado {
         return TECLADO.nextInt();
     }
 
-    public static int verificarY(int x, Celula[][] campo) {
+    public static int verificarX(int x, Celula[][] campo) {
         if(x > campo.length - 1) {
             x = campo.length - 1;
         }else if(x < 0) {
@@ -39,7 +39,7 @@ public class CampoMinado {
         return x;
     }
 
-    public static int verificarX(int y, Celula[][] campo) {
+    public static int verificarY(int y, Celula[][] campo) {
         if(y >= campo[0].length - 1) {
             y = campo[0].length - 1;
         }else if(y < 0) {
@@ -48,13 +48,21 @@ public class CampoMinado {
         return y;
     }
 
-    public static void novoJogo(int qtdBombas, Celula[][] campo) {
+    public static void verificarBandeiraCavar() {
+        
+    }
+
+    public static void novoJogo() {
+        Celula[][] campo = new Celula[15][15];
+        int qtdBombas = 12;
+
         Celula.criarCelulas(campo);
         Celula.limparBombas(campo);
         Celula.definirBombas(campo, qtdBombas);;
         Celula.definirBombasProximas(campo);
-        int yCelulaAtual = (campo.length + 1) / 2;
-        int xCelulaAtual = (campo[0].length + 1) / 2;
+        int xCelulaAtual = (campo.length) / 2;
+        int yCelulaAtual = (campo[0].length) / 2;
+
         limparConsole();
         Imprimir.campoMinado(campo);
         while(true) {
@@ -80,9 +88,27 @@ public class CampoMinado {
                         Imprimir.campoMinado(campo);
                         campo[xCelulaAtual][yCelulaAtual].estaSelecionado = false;
                         break;
+                    case 'a':
+                    case 'A':
+                        yCelulaAtual -= 1;
+                        yCelulaAtual = verificarY(yCelulaAtual, campo);
+                        campo[xCelulaAtual][yCelulaAtual].estaSelecionado = true;
+                        limparConsole();
+                        Imprimir.campoMinado(campo);
+                        campo[xCelulaAtual][yCelulaAtual].estaSelecionado = false;
+                        break;
+                    case 'd':
+                    case 'D':
+                        yCelulaAtual += 1;
+                        yCelulaAtual = verificarY(yCelulaAtual, campo);
+                        campo[xCelulaAtual][yCelulaAtual].estaSelecionado = true;
+                        limparConsole();
+                        Imprimir.campoMinado(campo);
+                        campo[xCelulaAtual][yCelulaAtual].estaSelecionado = false;
+                        break;
                 
                     default:
-                        break;
+                        continue;
                 }
             }
         }
@@ -97,8 +123,6 @@ public class CampoMinado {
     }
 
     public static void main(String[] args) {
-        Celula[][] campoMinado = new Celula[25][15];
-        int qtdBombas = 12;
         int opcao = 0;
 
         do {
@@ -106,7 +130,7 @@ public class CampoMinado {
             opcao = lerInt();
             switch(opcao) {
                 case 1:
-                    novoJogo(qtdBombas, campoMinado);
+                    novoJogo();
                     break;
                 case 2:
                     opcoes();
