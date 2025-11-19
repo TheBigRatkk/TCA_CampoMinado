@@ -48,17 +48,13 @@ public class CampoMinado {
         return y;
     }
 
-    public static void verificarBandeiraCavar() {
-        
-    }
-
     public static void novoJogo() {
         Celula[][] campo = new Celula[15][15];
         int qtdBombas = 12;
 
         Celula.criarCelulas(campo);
         Celula.limparBombas(campo);
-        Celula.definirBombas(campo, qtdBombas);;
+        Celula.definirBombas(campo, qtdBombas);
         Celula.definirBombasProximas(campo);
         int xCelulaAtual = (campo.length) / 2;
         int yCelulaAtual = (campo[0].length) / 2;
@@ -106,7 +102,18 @@ public class CampoMinado {
                         Imprimir.campoMinado(campo);
                         campo[xCelulaAtual][yCelulaAtual].estaSelecionado = false;
                         break;
-                
+                    case 'c':
+                    case 'C':
+                        campo[xCelulaAtual][yCelulaAtual].foiAberto = true;
+                        limparConsole();
+                        Imprimir.campoMinado(campo);
+                        break;
+                    case 'b':
+                    case 'B':
+                        campo[xCelulaAtual][yCelulaAtual].bandeira = true;
+                        limparConsole();
+                        Imprimir.campoMinado(campo);
+                        break;
                     default:
                         continue;
                 }
@@ -115,7 +122,7 @@ public class CampoMinado {
     }
 
     public static void opcoes() {
-
+        
     }
 
     public static void instrucoes() {
