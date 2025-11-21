@@ -34,34 +34,66 @@ public class Celula {
         }
     }
 
-    public static void definirBombasProximas(Celula[][] campo) {
-        int deslocamentoI;
-        int deslocamentoJ;
-        int bombasAoRedor;
+    public static void corrigirNumBombasProximas(Celula[][] campo) {
         for (int i = 0; i < campo.length; i++) {
             for (int j = 0; j < campo[0].length; j++) {
-                bombasAoRedor = 0;
-                if(campo[i][j].bomba) {
+                if(campo[i][j].bombasProximas == 0 && campo[i][j].bomba == false) {
+                    campo[i][j].bomba = true;
+                }
+            }
+        }
+    }
+
+    public static void definirBombasProximas(Celula[][] campo) {
+        for (int i = 0; i < campo.length; i++) {
+            for (int j = 0; j < campo[0].length; j++) {
+                int bombasAoRedor = 0;
+
+                if (campo[i][j].bomba) {
+                    campo[i][j].bombasProximas = 0;
                     continue;
                 }
-                for (int x = -1; x <= 1; x++) {
-                    for (int y = -1; y <= 1; y++) {
-                        if (x == 0 && y == 0) {
+
+                for (int dx = -1; dx <= 1; dx++) {
+                    for (int dy = -1; dy <= 1; dy++) {
+                        if (dx == 0 && dy == 0) {
                             continue;
                         }
-                        deslocamentoI = i + x;
-                        deslocamentoJ = y + j;
-                        if ((deslocamentoI >= 0 && deslocamentoI < campo.length) &&
-                            (deslocamentoJ >= 0 && deslocamentoJ < campo[0].length)) {
-                            if (campo[deslocamentoI][deslocamentoJ].bomba) {
-                                bombasAoRedor++;
-                            }
+
+                        int ni = i + dx;
+                        int nj = j + dy;
+
+                        if (ni >= 0 && ni < campo.length && nj >= 0 && nj < campo[0].length) {
+                            if (campo[ni][nj].bomba) bombasAoRedor++;
                         }
                     }
-                    
                 }
                 campo[i][j].bombasProximas = bombasAoRedor;
             }
         }
+    }
+
+    public static void abrirCelulasVizinhas(int x, int y, Celula[][] campo) {
+        for (int i = -2; i <= 2; i++) {
+            for (int j = -2; j <= 2; j++) {
+                int nI = x + i;
+                int nJ = y + j;
+                if(campo[nI][nJ].bomba == false) {
+                    campo[nI][nJ].foiAberto = true;
+                }
+            }
+        }
+    }
+
+    public static int corrigirQtdBombas(Celula[][] campo) {
+        int contBombas = 0;
+        for (int i = 0; i < campo.length; i++) {
+            for (int j = 0; j < campo[0].length; j++) {
+                if(campo[i][j].bomba == true) {
+                    contBombas++;
+                }
+            }
+        }
+        return contBombas;
     }
 }
