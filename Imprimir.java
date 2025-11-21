@@ -257,6 +257,30 @@ public class Imprimir {
         imprimirFinalCampoMinado(campo);
     }
 
+    public static void fimDeJogo(Celula[][] campo) {
+        setCor256(106);
+        imprimirTopoCampoMinado(campo);
+        for (int i = 0; i < campo.length; i++) {
+            for (int j = 0; j < campo[0].length; j++) {
+                setCor256(106);
+                if(campo[i][j].bomba == true) {
+                    System.out.print("|");
+                    setCombinacoes(i, j);
+                    System.out.print(" O ");
+                    resetColor();
+                }else {
+                    System.out.printf("| %d ", campo[i][j].bombasProximas);
+                }
+            }
+            System.out.print("|");
+            resetColor();
+            System.out.println();
+        }
+        resetColor();
+        setCor256(106);
+        imprimirFinalCampoMinado(campo);
+    }
+
     private static void imprimirGANHOU() {
         setCombinacoes(196, 17);
         System.out.print("+--------------------------------------------+");
@@ -337,6 +361,53 @@ public class Imprimir {
 
         setCombinacoes(196, 17);
         System.out.print("+--------------------------------------------+");
+        resetColor();
+        System.out.println();
+    }
+
+    private static void imprimirOPCOES() {
+        setCombinacoes(196, 17);
+        System.out.print("+-------------------------------------------+");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|   ____  _____   _____ ____  ______  _____ |");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|  / __ \\|  __ \\ / ____/ __ \\|  ____|/ ____||");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("| | |  | | |__) | |   | |  | | |__  | (___  |");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("| | |  | |  ___/| |   | |  | |  __|  \\___ \\ |");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("| | |__| | |    | |___| |__| | |____ ____) ||");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|  \\____/|_|     \\_____\\____/|______|_____/ |");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|                 )_)                       |");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("+-------------------------------------------+");
         resetColor();
         System.out.println();
     }
@@ -428,37 +499,245 @@ public class Imprimir {
         setCombinacoes(196, 17);
         System.out.print("+--------------------------------------------+");
         resetColor();
-    }    
+    }
+
+    private static void imprimirOpcoesMenusOpcao(int opSelec, int opTam, int opBombas) {
+        setCombinacoes(196, 17);
+        System.out.print("|                                           |");
+        resetColor();
+        System.out.println();
+
+        if(opSelec == 1) {
+            if(opTam == 1) {
+                setCombinacoes(196, 17);
+                System.out.print("|             Tamanho: ");
+                setCor256(7);
+                System.out.print("<9x9>");
+                setCor256(196);
+                System.out.print("                |");
+                resetColor();
+                System.out.println();
+            }if(opTam == 2) {
+                setCombinacoes(196, 17);
+                System.out.print("|            Tamanho: ");
+                setCor256(7);
+                System.out.print("<12x12>");
+                setCor256(196);
+                System.out.print("               |");
+                resetColor();
+                System.out.println();
+            }if(opTam == 3) {
+                setCombinacoes(196, 17);
+                System.out.print("|            Tamanho: ");
+                setCor256(7);
+                System.out.print("<15x15>");
+                setCor256(196);
+                System.out.print("               |");
+                resetColor();
+                System.out.println();
+            }
+        }else {
+            if(opTam == 1) {
+                setCombinacoes(196, 17);
+                System.out.print("|             Tamanho: <9x9>                |");
+                resetColor();
+                System.out.println();
+            }if(opTam == 2) {
+                setCombinacoes(196, 17);
+                System.out.print("|             Tamanho: <12x12>              |");
+                resetColor();
+                System.out.println();
+            }if(opTam == 3) {
+                setCombinacoes(196, 17);
+                System.out.print("|             Tamanho: <15x15>              |");
+                resetColor();
+                System.out.println();
+            }
+        }
+
+        setCombinacoes(196, 17);
+        System.out.print("|                                           |");
+        resetColor();
+        System.out.println();
+
+        if(opSelec == 2) {
+            setCombinacoes(196, 17);
+            System.out.print("|         Número de bombas: ");
+            setCor256(7);
+            System.out.printf("<%d>", opBombas);
+            setCor256(196);
+            System.out.print("            |");
+            resetColor();
+            System.out.println();
+        }else {
+            setCombinacoes(196, 17);
+            System.out.printf("|         Número de bombas: <%d>            |", opBombas);
+            resetColor();
+            System.out.println();
+        }
+
+        if(opTam == 1) {
+            setCombinacoes(196, 17);
+            System.out.print("|          Recomendado: 10 à 20             |");
+            resetColor();
+            System.out.println();
+        }if(opTam == 2) {
+            setCombinacoes(196, 17);
+            System.out.print("|          Recomendado: 20 à 40             |");
+            resetColor();
+            System.out.println();
+        }if(opTam == 3) {
+            setCombinacoes(196, 17);
+            System.out.print("|          Recomendado: 40 à 70             |");
+            resetColor();
+            System.out.println();
+        }
+
+        setCombinacoes(196, 17);
+        System.out.print("|                                           |");
+        resetColor();
+        System.out.println();
+
+        if(opSelec == 3) {
+            setCombinacoes(196, 17);
+            System.out.print("|                  ");
+            setCor256(7);
+            System.out.print("<Sair>");
+            setCor256(196);
+            System.out.print("                    |");
+            resetColor();
+            System.out.println();
+        }else {
+            setCombinacoes(196, 17);
+            System.out.print("|                 <Sair>                    |");
+            resetColor();
+            System.out.println();
+        }
+
+        setCombinacoes(196, 17);
+        System.out.print("|                                           |");
+        resetColor();
+        System.out.println();
+    }
+
+    public static void menuOpçoes(int opcaoSelec, int opTam, int opBombas) {
+        imprimirOPCOES();
+        imprimirOpcoesMenusOpcao(opcaoSelec, opTam, opBombas);
+
+        setCombinacoes(196, 17);
+        System.out.print("+-------------------------------------------+");
+        resetColor();
+        System.out.println();
+    }
+
+    public static void menuInstruções() {
+        setCombinacoes(196, 17);
+        System.out.print("+------------------------------------------------------------------------+");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|  _____ _   _  _____ _______ _____  _    _  _____ ____  ______  _____   |");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("| |_   _| \\ | |/ ____|__   __|  __ \\| |  | |/ ____/ __ \\|  ____|/ ____|  |");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|   | | |  \\| | (___    | |  | |__) | |  | | |   | |  | | |__  | (___    |");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|   | | | . ` |\\___ \\   | |  |  _  /| |  | | |   | |  | |  __|  \\___ \\   |");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|  _| |_| |\\  |____) |  | |  | | \\ \\| |__| | |___| |__| | |____ ____) |  |");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("| |_____|_| \\_|_____/   |_|  |_|  \\_\\\\____/ \\_____\\____/|______|_____/   |");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|                                             )_)                        |");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("+------------------------------------------------------------------------+");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|Use W, A, S, D para se mover nos menus e no jogo. Quando estiver jogando|");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|aperte \"C\" para cavar uma célula e \"B\" para marca-lá como bomba, se você|");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|cavar um local onde estiver uma bomba é fim de jogo, se conseguir marcar|");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|todas as células com bombas, você ganha. A cada vez que você acerta onde|");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|uma bomba esta, você ganha pontos, sua pontuação final é baseada nisso e|");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|no tempo demorado. Você pode ajustar o tamanho do campo e a quantidade  |");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|de bombas em opções. Se conseguir uma pontuação boa pode entrar no rank |");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("|dos top 20 melhores jogadores. Para voltar aperte enter.                |");
+        resetColor();
+        System.out.println();
+
+        setCombinacoes(196, 17);
+        System.out.print("+------------------------------------------------------------------------+");
+        resetColor();
+        System.out.println();
+    }
 }
-/*
-+--------------------------------------------+
-|  _____          _   _ _    _  ____  _    _ |
-| / ____|   /\   | \ | | |  | |/ __ \| |  | ||
-|| |  __   /  \  |  \| | |__| | |  | | |  | ||
-|| | |_ | / /\ \ | . ` |  __  | |  | | |  | ||
-|| |__| |/ ____ \| |\  | |  | | |__| | |__| ||
-| \_____/_/    \_\_| \_|_|  |_|\____/ \____/ |
-+--------------------------------------------+
-|                                            |
-|               >Ir de novo<                 |
-|                                            |
-|              >Ver pontuação<               |
-|                                            |
-|                  >Sair<                    |
-|                                            |
-+--------------------------------------------+
-*/
-
-/* +-------------------------------------------+
-   | _____  ______ _____  _____  ______ _    _ |
-   ||  __ \|  ____|  __ \|  __ \|  ____| |  | ||
-   || |__) | |__  | |__) | |  | | |__  | |  | ||
-   ||  ___/|  __| |  _  /| |  | |  __| | |  | ||
-   || |    | |____| | \ \| |__| | |____| |__| ||
-   ||_|    |______|_|  \_\_____/|______|\____/ |
-   +-------------------------------------------+                                       
-                                            
-
-
-
+/* +------------------------------------------------------------------------+
+   |  _____ _   _  _____ _______ _____  _    _  _____ ____  ______  _____   |
+   | |_   _| \ | |/ ____|__   __|  __ \| |  | |/ ____/ __ \|  ____|/ ____|  |
+   |   | | |  \| | (___    | |  | |__) | |  | | |   | |  | | |__  | (___    |
+   |   | | | . ` |\___ \   | |  |  _  /| |  | | |   | |  | |  __|  \___ \   |
+   |  _| |_| |\  |____) |  | |  | | \ \| |__| | |___| |__| | |____ ____) |  |
+   | |_____|_| \_|_____/   |_|  |_|  \_\\____/ \_____\____/|______|_____/   |
+   |                                             )_)                        |
+   +------------------------------------------------------------------------+                                                                
+   |Use W, A, S, D para se mover nos menus e no jogo. Quando estiver jogando|
+   |aperte "C" para cavar uma célula e "B" para marca-lá como bomba, se você|
+   |cavar um local onde estiver uma bomba é fim de jogo, se conseguir marcar|
+   |todas as células com bombas, você ganha. A cada vez que você acerta onde|
+   |uma bomba esta, você ganha pontos, sua pontuação final é baseada nisso e|
+   |no tempo demorado. Você pode ajustar o tamanho do campo e a quantidade  |
+   |de bombas em opções. Se conseguir uma pontuação boa pode entrar no rank |
+   |dos top 20 melhores jogadores. Para voltar aperte enter.                |
+   +------------------------------------------------------------------------+
 */
