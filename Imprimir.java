@@ -604,7 +604,7 @@ public class Imprimir {
             setCor256(7);
             System.out.print("<Sair>");
             setCor256(196);
-            System.out.print("                    |");
+            System.out.print("                   |");
             resetColor();
             System.out.println();
         }else {
@@ -721,23 +721,43 @@ public class Imprimir {
         resetColor();
         System.out.println();
     }
+
+    public static void rankings(int[][] pontuacao, String[][] nomes, int opSelc) {
+        if(opSelc == 1) {
+            System.out.printf("\t\t\t\tTOP20(9x9)\n\n");
+            for (int i = 0; i < pontuacao[0].length; i++) {
+                if (nomes[0][i].isEmpty()) {
+                    System.out.printf("%d.Vazio: 0 pontos\n", i + 1);
+                }else {
+                    System.out.printf("%d.%S:  %d pontos\n", i + 1, nomes[0][i], pontuacao[0][i]);
+                }
+            }
+        }if(opSelc == 2) {
+            System.out.printf("\t\t\t\tTOP20(12x12)\n\n");
+            for (int i = 0; i < pontuacao[0].length; i++) {
+                if (nomes[1][i].isEmpty()) {
+                    System.out.printf("%d.Vazio: 0 pontos\n", i + 1);
+                }else {
+                    System.out.printf("%d.%S:  %d pontos\n", i + 1, nomes[1][i], pontuacao[1][i]);
+                }
+            }
+        }if(opSelc == 3) {
+            System.out.printf("\t\t\t\tTOP20(15x15)\n\n");
+            for (int i = 0; i < pontuacao[0].length; i++) {
+                if (nomes[2][i].isEmpty()) {
+                    System.out.printf("%d.Vazio: 0 pontos\n", i + 1);
+                }else {
+                    System.out.printf("%d.%S:  %d pontos\n", i + 1, nomes[2][i], pontuacao[2][i]);
+                }
+            }
+        }
+        System.out.print("Aperte enter para voltar ao início.");
+    }
 }
-/* +------------------------------------------------------------------------+
-   |  _____ _   _  _____ _______ _____  _    _  _____ ____  ______  _____   |
-   | |_   _| \ | |/ ____|__   __|  __ \| |  | |/ ____/ __ \|  ____|/ ____|  |
-   |   | | |  \| | (___    | |  | |__) | |  | | |   | |  | | |__  | (___    |
-   |   | | | . ` |\___ \   | |  |  _  /| |  | | |   | |  | |  __|  \___ \   |
-   |  _| |_| |\  |____) |  | |  | | \ \| |__| | |___| |__| | |____ ____) |  |
-   | |_____|_| \_|_____/   |_|  |_|  \_\\____/ \_____\____/|______|_____/   |
-   |                                             )_)                        |
-   +------------------------------------------------------------------------+                                                                
-   |Use W, A, S, D para se mover nos menus e no jogo. Quando estiver jogando|
-   |aperte "C" para cavar uma célula e "B" para marca-lá como bomba, se você|
-   |cavar um local onde estiver uma bomba é fim de jogo, se conseguir marcar|
-   |todas as células com bombas, você ganha. A cada vez que você acerta onde|
-   |uma bomba esta, você ganha pontos, sua pontuação final é baseada nisso e|
-   |no tempo demorado. Você pode ajustar o tamanho do campo e a quantidade  |
-   |de bombas em opções. Se conseguir uma pontuação boa pode entrar no rank |
-   |dos top 20 melhores jogadores. Para voltar aperte enter.                |
-   +------------------------------------------------------------------------+
+
+/*              TOP 20
+
+
+
+
 */
