@@ -443,14 +443,14 @@ public class Imprimir {
             setCombinacoes(196, 17);
             System.out.print("|               ");
             setCor256(7);
-            System.out.print(">Ver ranking<");
+            System.out.print(">Ver pontuação<");
             setCor256(196);
-            System.out.print("                |");
+            System.out.print("              |");
             resetColor();
             System.out.println();
         }else {
             setCombinacoes(196, 17);
-            System.out.print("|               >Ver ranking<                |");
+            System.out.print("|               >Ver pontuação<              |");
             resetColor();
             System.out.println();
         }
@@ -561,19 +561,37 @@ public class Imprimir {
         System.out.println();
 
         if(opSelec == 2) {
-            setCombinacoes(196, 17);
-            System.out.print("|         Número de bombas: ");
-            setCor256(7);
-            System.out.printf("<%d>", opBombas);
-            setCor256(196);
-            System.out.print("            |");
-            resetColor();
-            System.out.println();
+            if(opBombas >= 100) {
+                setCombinacoes(196, 17);
+                System.out.print("|         Número de bombas: ");
+                setCor256(7);
+                System.out.printf("<%d>", opBombas);
+                setCor256(196);
+                System.out.print("           |");
+                resetColor();
+                System.out.println();
+            }else {
+                setCombinacoes(196, 17);
+                System.out.print("|         Número de bombas: ");
+                setCor256(7);
+                System.out.printf("<%d>", opBombas);
+                setCor256(196);
+                System.out.print("            |");
+                resetColor();
+                System.out.println();
+            }
         }else {
-            setCombinacoes(196, 17);
-            System.out.printf("|         Número de bombas: <%d>            |", opBombas);
-            resetColor();
-            System.out.println();
+            if(opBombas >= 100) {
+                setCombinacoes(196, 17);
+                System.out.printf("|         Número de bombas: <%d>           |", opBombas);
+                resetColor();
+                System.out.println();
+            }else {
+                setCombinacoes(196, 17);
+                System.out.printf("|         Número de bombas: <%d>            |", opBombas);
+                resetColor();
+                System.out.println();
+            }
         }
 
         if(opTam == 1) {
@@ -721,43 +739,12 @@ public class Imprimir {
         resetColor();
         System.out.println();
     }
-
-    public static void rankings(int[][] pontuacao, String[][] nomes, int opSelc) {
-        if(opSelc == 1) {
-            System.out.printf("\t\t\t\tTOP20(9x9)\n\n");
-            for (int i = 0; i < pontuacao[0].length; i++) {
-                if (nomes[0][i].isEmpty()) {
-                    System.out.printf("%d.Vazio: 0 pontos\n", i + 1);
-                }else {
-                    System.out.printf("%d.%S:  %d pontos\n", i + 1, nomes[0][i], pontuacao[0][i]);
-                }
-            }
-        }if(opSelc == 2) {
-            System.out.printf("\t\t\t\tTOP20(12x12)\n\n");
-            for (int i = 0; i < pontuacao[0].length; i++) {
-                if (nomes[1][i].isEmpty()) {
-                    System.out.printf("%d.Vazio: 0 pontos\n", i + 1);
-                }else {
-                    System.out.printf("%d.%S:  %d pontos\n", i + 1, nomes[1][i], pontuacao[1][i]);
-                }
-            }
-        }if(opSelc == 3) {
-            System.out.printf("\t\t\t\tTOP20(15x15)\n\n");
-            for (int i = 0; i < pontuacao[0].length; i++) {
-                if (nomes[2][i].isEmpty()) {
-                    System.out.printf("%d.Vazio: 0 pontos\n", i + 1);
-                }else {
-                    System.out.printf("%d.%S:  %d pontos\n", i + 1, nomes[2][i], pontuacao[2][i]);
-                }
-            }
-        }
-        System.out.print("Aperte enter para voltar ao início.");
+ 
+    public static void pontuacao(int pontuacao) {
+        setCombinacoes(196, 17);
+        System.out.printf("Sua pontuação é: %d", pontuacao );
+        resetColor();
+        System.out.println();
+        System.out.println("Pressione enter para volta ao início.");
     }
 }
-
-/*              TOP 20
-
-
-
-
-*/
