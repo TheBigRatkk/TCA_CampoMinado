@@ -1,21 +1,24 @@
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-
-import javax.management.ListenerNotFoundException;
 import javax.sound.sampled.*;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
-
 import java.io.File;
 import java.io.IOException;
 
 public class CampoMinado {
 
+    //Variaveis globais
+    //Scanner
     public static Scanner TECLADO = new Scanner(System.in);
+    //Tamanho do campo(9x9, 12x12, 15x15) padrao: 2(12x12)
     public static int configTam = 2;
+    //Numero de bombas(10 - 100) padrao: 40
     public static int configBombas = 40;
+    //Pontuacao do jogador
     public static int jogadorPontuacao = 0;
 
+    //Configura JNA
     public interface Crt extends Library {
         Crt INSTANCE = Native.load("msvcrt", Crt.class);
 
@@ -24,14 +27,17 @@ public class CampoMinado {
         int _getch();
     }
 
+    //Retorna se pressionou alguma tecla
     public static boolean pressionouTecla() {
         return Crt.INSTANCE._kbhit() != 0;
     }
 
+    //obtem a tecla pressionada
     public static int obtemTeclaPressionada() {
         return Crt.INSTANCE._getch();
     }
 
+    //Limpa o console
     public static void limparConsole() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
@@ -40,37 +46,44 @@ public class CampoMinado {
     public static void tocarSom(String caminhoArquivoSom){
               
         try {
-            // Abrindo o arquivo de som
+            //Abre o arquivo de som
             File soundFile = new File(caminhoArquivoSom);
             if (!soundFile.exists()) {
                 System.out.println("Arquivo de som não encontrado: " + caminhoArquivoSom);
                 return;
             }
 
-            // Criando um AudioInputStream
+            //Cria um AudioInputStream
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
 
-            // Obtendo as informações do formato de áudio
+            //Obtem as informacoes do formato de audio
             AudioFormat format = audioStream.getFormat();
             DataLine.Info info = new DataLine.Info(Clip.class, format);
 
-            // Criando o Clip e carregando o áudio
+            //Cria o Clip e carrega o audio
             Clip audioClip = (Clip) AudioSystem.getLine(info);
             audioClip.open(audioStream);
 
+            //comeca
             audioClip.start();
 
-            // Mantendo o programa ativo enquanto o som toca            
+            // Mantendo o programa ativo enquanto o som toca
+            /*Adiciona um ouvinte ao audio, que monitora os evntos de execucao do audio
+              Se o evento detectado for do tipo STOP, fecha o clip e tenta fechar o stream
+              se uma execao for detectada exibe uma mensagem e o erro.
+             */          
             audioClip.addLineListener(event -> {
                 if (event.getType() == LineEvent.Type.STOP) {
                     audioClip.close();
                     try { 
-                    audioStream.close();
+                        audioStream.close();
                     } catch(IOException e) {
-
+                        System.err.println("Não foi possível parar o áudio.");
+                        e.printStackTrace();
                     }
                 }
             });
+        //Se execoes forem detectadas exibe a mensagem de erro e o erro de cada execao
         } catch (UnsupportedAudioFileException e) {
             System.err.println("O formato de áudio não é suportado.");
             e.printStackTrace();
@@ -83,10 +96,12 @@ public class CampoMinado {
         }
     }
 
+    //Metodo de ler numero inteiro
     public static int lerInt() {
         return TECLADO.nextInt();
     }
 
+    //Verifica se o x é maior que o limite da matriz, caso sim x recebe o limite
     public static int verificarX(int x, Celula[][] campo) {
         if (x > campo.length - 1) {
             x = campo.length - 1;
@@ -96,6 +111,7 @@ public class CampoMinado {
         return x;
     }
 
+    //Verifica se o y é maior que o limite da matriz, caso sim y recebe o limite
     public static int verificarY(int y, Celula[][] campo) {
         if (y >= campo[0].length - 1) {
             y = campo[0].length - 1;
@@ -105,6 +121,9 @@ public class CampoMinado {
         return y;
     }
 
+    //Metodo para definir o lugar em que o campo faz a abertura inicial
+    //Percorre o meio da matriz em busca de uma celula sem bomba
+    //Se nao for bomba, sai do loop, se for bomba, incrementa o x
     public static int definirPrimeriroX(Celula[][] campo) {
         int x = campo.length / 2;
         int y = campo[0].length / 2;
@@ -118,16 +137,19 @@ public class CampoMinado {
         return x;
     }
 
+    /*Metodo que verifica se o jogador ganhou
+      Percorre a matriz em busca das bombas que foram encontradas,
+      ou seja, se a mesma celula for uma bomba e estiver com uma bandeira
+      se o numero de bombas encontradas for maior ou igual que
+      a quantidade de bombas, retorna verdadeiro, se sair do loop
+      retorna falso*/
     public static boolean verificarSeGanhou(Celula[][] campo, int qtdBombas) {
         int bombasAchadas = 0;
         for (int i = 0; i < campo.length; i++) {
             for (int j = 0; j < campo[0].length; j++) {
-                if (campo[i][j].bomba == true) {
-                    if (campo[i][j].bandeira == true) {
-                        bombasAchadas++;
-                    }
-                }
-                if (bombasAchadas >= qtdBombas) {
+                if (campo[i][j].bomba == true && campo[i][j].bandeira == true) {
+                    bombasAchadas++;
+                }if (bombasAchadas >= qtdBombas) {
                     return true;
                 }
             }
@@ -135,6 +157,10 @@ public class CampoMinado {
         return false;
     }
 
+    /*Metodo que verifica se o jogador perdeu
+      percorre a matriz verificando se a posicao atual
+      é uma bomba e se foi aberto, se sim retorna verdadeiro,
+      se sair do loop, retorna falso*/
     public static boolean verificarSePerdeu(Celula[][] campo) {
         for (int i = 0; i < campo.length; i++) {
             for (int j = 0; j < campo[0].length; j++) {
@@ -146,40 +172,42 @@ public class CampoMinado {
         return false;
     }
 
+    //Metodo que organiza as funcoes quando game over
     public static void perdeu(Celula[][] campo) throws IOException, InterruptedException {
+        int opcaoSelec = 1;//Variavel para controlar o uso das cores junto com JNA
         limparConsole();
-        Imprimir.fimDeJogo(campo);
-        tocarSom("soms\\boooooooooooo.wav");
-        tocarSom("soms\\bomba.wav");
-        TimeUnit.SECONDS.sleep(3);
-        int opcaoSelec = 1;
+        Imprimir.fimDeJogo(campo);//Imprime "animacao" de game over
+        tocarSom("sons\\boooooooooooo.wav");
+        tocarSom("sons\\bomba.wav");
+        TimeUnit.SECONDS.sleep(3);//Paraliza o progrma por 3 segundos(igual o thread.sleep)
         limparConsole();
-        Imprimir.menuPerdeu(opcaoSelec);
+        Imprimir.menuPerdeu(opcaoSelec);//imprime o menu de game over
         while (true) {
                 if (pressionouTecla()) {
-                int tecla = obtemTeclaPressionada();
+                    int tecla = obtemTeclaPressionada();
 
-                switch (tecla) {
-                    case 'w':
-                    case 'W':
-                        opcaoSelec--;
-                        opcaoSelec = verificarOpSelecFim(opcaoSelec);
-                        limparConsole();
-                        Imprimir.menuPerdeu(opcaoSelec);
-                        break;
-                    case 's':
-                    case 'S':
-                        opcaoSelec++;
-                        opcaoSelec = verificarOpSelecFim(opcaoSelec);
-                        limparConsole();
-                        Imprimir.menuPerdeu(opcaoSelec);
-                        break;
-                    case '\n':
-                    case '\r':
-                        redirecionarPraFuncoesFinais(opcaoSelec);
-                    default:
-                        continue;
-                }
+                    //switch case na tecla pressionada
+                    switch (tecla) {
+                        case 'w'://Caso 'w' desincrementa 1 da opcao atual
+                        case 'W':
+                            opcaoSelec--;
+                            opcaoSelec = verificarOpSelecFim(opcaoSelec);//Verifica a opcao selcionada para não passar do limite(1-3)
+                            limparConsole();
+                            Imprimir.menuPerdeu(opcaoSelec);
+                            break;
+                        case 's'://Caso 's' incrementa 1 da opcao atual
+                        case 'S':
+                            opcaoSelec++;
+                            opcaoSelec = verificarOpSelecFim(opcaoSelec);
+                            limparConsole();
+                            Imprimir.menuPerdeu(opcaoSelec);
+                            break;
+                        case '\n':
+                        case '\r':
+                            redirecionarPraFuncoesFinais(opcaoSelec);
+                        default:
+                            continue;
+                    }
             }
         }
     }
@@ -188,8 +216,8 @@ public class CampoMinado {
         int opcaoSelec = 1;
         limparConsole();
         Imprimir.menuGanhou(opcaoSelec);
-        tocarSom("soms\\Aplusos.wav");
-        tocarSom("soms\\makita.wav");
+        tocarSom("sons\\Aplusos.wav");
+        tocarSom("sons\\makita.wav");
         while (true) {
                 if (pressionouTecla()) {
                 int tecla = obtemTeclaPressionada();
@@ -342,7 +370,7 @@ public class CampoMinado {
                     case 'C':
                         campo[xCelulaAtual][yCelulaAtual].bandeira = false;
                         campo[xCelulaAtual][yCelulaAtual].foiAberto = true;
-                        tocarSom("soms\\SHOVEL.wav");
+                        tocarSom("sons\\SHOVEL.wav");
                         if (campo[xCelulaAtual][yCelulaAtual].bomba == false) {
                             acertos += 10;
                         }
@@ -356,10 +384,12 @@ public class CampoMinado {
                                 campo[xCelulaAtual][yCelulaAtual].bandeira = false;
                             } else {
                                 campo[xCelulaAtual][yCelulaAtual].bandeira = true;
-                                acertos += 15;
+                                if(campo[xCelulaAtual][yCelulaAtual].bomba == true) {
+                                    acertos += 15;
+                                }
                             }
                         }
-                        tocarSom("soms\\bandeira.wav");
+                        tocarSom("sons\\bandeira.wav");
                         limparConsole();
                         Imprimir.campoMinado(campo);
                         break;
