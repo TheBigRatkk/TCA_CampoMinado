@@ -211,7 +211,7 @@ public class Imprimir {
     private static void verificarSelecBandeira(Celula[][] campo, int i, int j) {
         if (campo[i][j].estaSelecionado == true) {
             System.out.print("| ");
-            setCor256(166);
+            setCor256(7);
             System.out.print("P ");
             setCor256(10);
         } else {
@@ -234,7 +234,7 @@ public class Imprimir {
         }
     }
 
-    public static void campoMinado(Celula[][] campo) {
+    public static void campoMinado(Celula[][] campo, int bandeiras) {
         setCor256(10);
         imprimirTopoCampoMinado(campo);
         for (int i = 0; i < campo.length; i++) {
@@ -258,6 +258,10 @@ public class Imprimir {
         resetColor();
         setCor256(10);
         imprimirFinalCampoMinado(campo);
+        
+        System.out.print("Bandeiras restantes: ");
+        setCor256(196);
+        System.out.printf("%d\n", bandeiras);
     }
 
     public static void fimDeJogo(Celula[][] campo) {

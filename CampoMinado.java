@@ -129,11 +129,14 @@ public class CampoMinado {
       retorna falso*/
     public static boolean verificarSeGanhou(Celula[][] campo, int qtdBombas) {
         int bombasAchadas = 0;
+        int abertos = 0;
         for (int i = 0; i < campo.length; i++) {
             for (int j = 0; j < campo[0].length; j++) {
                 if (campo[i][j].bomba == true && campo[i][j].bandeira == true) {
                     bombasAchadas++;
-                }if (bombasAchadas >= qtdBombas) {
+                }if (campo[i][j].bomba == false && campo[i][j].foiAberto == true) {
+                    abertos++;
+                }if (bombasAchadas >= qtdBombas && abertos >= (campo.length * campo[0].length) - qtdBombas) {
                     return true;
                 }
             }
@@ -259,6 +262,15 @@ public class CampoMinado {
         }
     }
 
+    public static int verificarNumBandeiras(int totalBandeiras, int bandeiras) {
+        if (bandeiras > totalBandeiras) {
+            bandeiras = totalBandeiras;
+        }else if(bandeiras < 0){
+            bandeiras = 0;
+        }
+        return bandeiras;
+    }
+
     public static void novoJogo() throws IOException {
         int tamanho = 12;
         if (configTam == 1) {
@@ -271,6 +283,7 @@ public class CampoMinado {
 
         Celula[][] campo = new Celula[tamanho][tamanho];
         int qtdBombas = configBombas;
+        int bandeiras = qtdBombas;
         int acertos = 0;
         long tempoInicial = System.currentTimeMillis();
         long fim;
@@ -287,14 +300,14 @@ public class CampoMinado {
         int yCelulaAtual = (campo[0].length) / 2;
 
         limparConsole();
-        Imprimir.campoMinado(campo);
+        Imprimir.campoMinado(campo, bandeiras);
 
         while (true) {
             if (verificarSePerdeu(campo) == true) {
                 fim = System.currentTimeMillis();
                 tempoTotal = fim - tempoInicial;
                 int modficador = (int) (Math.random() * 10);
-                jogadorPontuacao = (int) ((acertos * modficador * 10000) / tempoTotal);
+                jogadorPontuacao = (int) ((acertos * modficador * 100000) / tempoTotal);
                 try {
                     perdeu(campo);
                 } catch (InterruptedException ie) {
@@ -305,7 +318,7 @@ public class CampoMinado {
             if (verificarSeGanhou(campo, qtdBombas) == true) {
                 fim = System.currentTimeMillis();
                 tempoTotal = fim - tempoInicial;
-                jogadorPontuacao = (int) ((acertos * 10000) / tempoTotal);
+                jogadorPontuacao = (int) ((acertos * 100000) / tempoTotal);
                 ganhou();
             }
             if (pressionouTecla()) {
@@ -318,7 +331,7 @@ public class CampoMinado {
                         xCelulaAtual = verificarX(xCelulaAtual, campo);
                         campo[xCelulaAtual][yCelulaAtual].estaSelecionado = true;
                         limparConsole();
-                        Imprimir.campoMinado(campo);
+                        Imprimir.campoMinado(campo, bandeiras);
                         campo[xCelulaAtual][yCelulaAtual].estaSelecionado = false;
                         break;
                     case 's':
@@ -327,7 +340,7 @@ public class CampoMinado {
                         xCelulaAtual = verificarX(xCelulaAtual, campo);
                         campo[xCelulaAtual][yCelulaAtual].estaSelecionado = true;
                         limparConsole();
-                        Imprimir.campoMinado(campo);
+                        Imprimir.campoMinado(campo, bandeiras);
                         campo[xCelulaAtual][yCelulaAtual].estaSelecionado = false;
                         break;
                     case 'a':
@@ -336,7 +349,7 @@ public class CampoMinado {
                         yCelulaAtual = verificarY(yCelulaAtual, campo);
                         campo[xCelulaAtual][yCelulaAtual].estaSelecionado = true;
                         limparConsole();
-                        Imprimir.campoMinado(campo);
+                        Imprimir.campoMinado(campo, bandeiras);
                         campo[xCelulaAtual][yCelulaAtual].estaSelecionado = false;
                         break;
                     case 'd':
@@ -345,7 +358,7 @@ public class CampoMinado {
                         yCelulaAtual = verificarY(yCelulaAtual, campo);
                         campo[xCelulaAtual][yCelulaAtual].estaSelecionado = true;
                         limparConsole();
-                        Imprimir.campoMinado(campo);
+                        Imprimir.campoMinado(campo, bandeiras);
                         campo[xCelulaAtual][yCelulaAtual].estaSelecionado = false;
                         break;
                     case 'c':
@@ -357,15 +370,22 @@ public class CampoMinado {
                             acertos += 10;
                         }
                         limparConsole();
-                        Imprimir.campoMinado(campo);
+                        Imprimir.campoMinado(campo, bandeiras);
                         break;
                     case 'b':
                     case 'B':
                         if (campo[xCelulaAtual][yCelulaAtual].foiAberto == false) {
                             if (campo[xCelulaAtual][yCelulaAtual].bandeira == true) {
                                 campo[xCelulaAtual][yCelulaAtual].bandeira = false;
+                                bandeiras++;
+                                bandeiras = verificarNumBandeiras(qtdBombas, bandeiras);
                             } else {
                                 campo[xCelulaAtual][yCelulaAtual].bandeira = true;
+                                bandeiras--;
+                                if(bandeiras <= 0) {
+                                    campo[xCelulaAtual][yCelulaAtual].bandeira = false;
+                                }
+                                bandeiras = verificarNumBandeiras(qtdBombas, bandeiras);
                                 if(campo[xCelulaAtual][yCelulaAtual].bomba == true) {
                                     acertos += 15;
                                 }
@@ -373,7 +393,7 @@ public class CampoMinado {
                         }
                         tocarSom("sons\\bandeira.wav");
                         limparConsole();
-                        Imprimir.campoMinado(campo);
+                        Imprimir.campoMinado(campo, bandeiras);
                         break;
                     default:
                         continue;
