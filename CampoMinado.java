@@ -242,7 +242,7 @@ public class CampoMinado {
             if (pressionouTecla()) {
                 int ch = obtemTeclaPressionada();
                 if (ch == '\n' || ch == '\r') {
-                    inicio(1);
+                    inicio();
                 }
                 limparConsole();
                 Imprimir.pontuacao(jogadorPontuacao);
@@ -258,7 +258,7 @@ public class CampoMinado {
             mostrarPontuacao();
         }
         if (opcaoSelec == 3) {
-            inicio(1);
+            inicio();
         }
     }
 
@@ -479,7 +479,7 @@ public class CampoMinado {
                         case '\n':
                         case '\r':
                             if (opcaoSelec == 3) {
-                                inicio(1);
+                                inicio();
                                 return;
                             }
                             break;
@@ -505,7 +505,7 @@ public class CampoMinado {
                     int ch = obtemTeclaPressionada();
 
                     if(ch == '\n' || ch == '\r') {
-                        inicio(1);
+                        inicio();
                     }else {
                         limparConsole();
                         Imprimir.menuInstruções();
@@ -551,7 +551,8 @@ public class CampoMinado {
         }
     }
 
-    public static void inicio(int opcaoSelec) throws IOException {
+    public static void inicio() throws IOException {
+        int opcaoSelec = 1;
         limparConsole();
         Imprimir.menuInicial(opcaoSelec);
         while (true) {
@@ -585,12 +586,6 @@ public class CampoMinado {
     }
 
     public static void main(String[] args) throws IOException {
-        int opcaoSelec = 1;
-        Imprimir.setCor256(196);
-        System.out.println("Para jogar, digite seu nome:");
-        Imprimir.resetColor();
-        jogadorPontuacao = 0;
-
-        inicio(opcaoSelec);
+        inicio();
     }
 }
