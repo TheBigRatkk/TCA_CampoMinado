@@ -168,6 +168,9 @@ public class Imprimir {
 
     private static void verificarCorNumero(int bombasProximas) {
         switch (bombasProximas) {
+            case 0:
+                setCor256(11);
+                break;
             case 1:
                 setCor256(39);
                 break;
@@ -210,12 +213,12 @@ public class Imprimir {
             System.out.print("| ");
             setCor256(166);
             System.out.print("P ");
-            setCor256(106);
+            setCor256(10);
         } else {
             System.out.print("| ");
             setCor256(1);
             System.out.print("P ");
-            setCor256(106);
+            setCor256(10);
         }
     }
 
@@ -224,24 +227,24 @@ public class Imprimir {
             System.out.print("| ");
             setCor256(7);
             System.out.print("* ");
-            setCor256(106);
+            setCor256(10);
         } else {
-            setCor256(106);
+            setCor256(10);
             System.out.print("| * ");
         }
     }
 
     public static void campoMinado(Celula[][] campo) {
-        setCor256(106);
+        setCor256(10);
         imprimirTopoCampoMinado(campo);
         for (int i = 0; i < campo.length; i++) {
             for (int j = 0; j < campo[0].length; j++) {
-                setCor256(106);
+                setCor256(10);
                 if (campo[i][j].foiAberto == true) {
-                    System.out.print("| ");
-                    verificarSelecNum(campo, i, j);
-                    System.out.printf("%d ", campo[i][j].bombasProximas);
-                    setCor256(106);
+                        System.out.print("| ");
+                        verificarSelecNum(campo, i, j);
+                        System.out.printf("%d ", campo[i][j].bombasProximas);
+                        setCor256(10);
                 } else if (campo[i][j].bandeira == true) {
                     verificarSelecBandeira(campo, i, j);
                 } else {
@@ -253,16 +256,16 @@ public class Imprimir {
             System.out.println();
         }
         resetColor();
-        setCor256(106);
+        setCor256(10);
         imprimirFinalCampoMinado(campo);
     }
 
     public static void fimDeJogo(Celula[][] campo) {
-        setCor256(106);
+        setCor256(10);
         imprimirTopoCampoMinado(campo);
         for (int i = 0; i < campo.length; i++) {
             for (int j = 0; j < campo[0].length; j++) {
-                setCor256(106);
+                setCor256(10);
                 if(campo[i][j].bomba == true) {
                     System.out.print("|");
                     setCombinacoes(i, j);
@@ -277,7 +280,7 @@ public class Imprimir {
             System.out.println();
         }
         resetColor();
-        setCor256(106);
+        setCor256(10);
         imprimirFinalCampoMinado(campo);
     }
 
@@ -725,12 +728,7 @@ public class Imprimir {
         System.out.println();
 
         setCombinacoes(196, 17);
-        System.out.print("|de bombas em opções. Se conseguir uma pontuação boa pode entrar no rank |");
-        resetColor();
-        System.out.println();
-
-        setCombinacoes(196, 17);
-        System.out.print("|dos top 20 melhores jogadores. Para voltar aperte enter.                |");
+        System.out.print("|de bombas em opções. Para voltar aperte enter.                          |");
         resetColor();
         System.out.println();
 

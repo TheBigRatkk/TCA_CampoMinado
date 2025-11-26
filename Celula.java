@@ -34,11 +34,11 @@ public class Celula {
         }
     }
 
-    public static void corrigirNumBombasProximas(Celula[][] campo) {
+    public static void abrirCampo(Celula[][] campo) {
         for (int i = 0; i < campo.length; i++) {
             for (int j = 0; j < campo[0].length; j++) {
                 if(campo[i][j].bombasProximas == 0 && campo[i][j].bomba == false) {
-                    campo[i][j].bomba = true;
+                    campo[i][j].foiAberto = true;
                 }
             }
         }
@@ -64,7 +64,9 @@ public class Celula {
                         int nj = j + dy;
 
                         if (ni >= 0 && ni < campo.length && nj >= 0 && nj < campo[0].length) {
-                            if (campo[ni][nj].bomba) bombasAoRedor++;
+                            if (campo[ni][nj].bomba) {
+                                bombasAoRedor++;
+                            }
                         }
                     }
                 }
@@ -73,27 +75,31 @@ public class Celula {
         }
     }
 
-    public static void abrirCelulasVizinhas(int x, int y, Celula[][] campo) {
-        for (int i = -2; i <= 2; i++) {
-            for (int j = -2; j <= 2; j++) {
-                int nI = x + i;
-                int nJ = y + j;
-                if(campo[nI][nJ].bomba == false) {
-                    campo[nI][nJ].foiAberto = true;
-                }
-            }
-        }
-    }
-
-    public static int corrigirQtdBombas(Celula[][] campo) {
-        int contBombas = 0;
+    public static void abrirCelulasAdjacentes(Celula[][] campo) {
         for (int i = 0; i < campo.length; i++) {
             for (int j = 0; j < campo[0].length; j++) {
-                if(campo[i][j].bomba == true) {
-                    contBombas++;
+
+                if (campo[i][j].bombasProximas == 0 && campo[i][j].bomba == false) {
+
+                    for(int dx = -1; dx <= 1; dx++) {
+                        for(int dy = -1; dy <= 1; dy++) {
+
+                            if (dx == 0 & dy == 0) {
+                                continue;
+                            }
+
+                            int ni = i + dx;
+                            int nj = j + dy;
+
+                            if (ni >= 0 && ni < campo.length && nj >= 0 && nj < campo[0].length) {
+                                if (campo[ni][nj].bomba == false) {
+                                    campo[ni][nj].foiAberto = true;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-        return contBombas;
     }
 }

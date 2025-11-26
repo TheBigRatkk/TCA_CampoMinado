@@ -13,8 +13,8 @@ public class CampoMinado {
     public static Scanner TECLADO = new Scanner(System.in);
     //Tamanho do campo(9x9, 12x12, 15x15) padrao: 2(12x12)
     public static int configTam = 2;
-    //Numero de bombas(10 - 100) padrao: 40
-    public static int configBombas = 40;
+    //Numero de bombas(10 - 100) padrao: 30
+    public static int configBombas = 30;
     //Pontuacao do jogador
     public static int jogadorPontuacao = 0;
 
@@ -121,22 +121,6 @@ public class CampoMinado {
         return y;
     }
 
-    //Metodo para definir o lugar em que o campo faz a abertura inicial
-    //Percorre o meio da matriz em busca de uma celula sem bomba
-    //Se nao for bomba, sai do loop, se for bomba, incrementa o x
-    public static int definirPrimeriroX(Celula[][] campo) {
-        int x = campo.length / 2;
-        int y = campo[0].length / 2;
-        while (true) {
-            if (campo[x][y].bomba == false) {
-                break;
-            } else {
-                x++;
-            }
-        }
-        return x;
-    }
-
     /*Metodo que verifica se o jogador ganhou
       Percorre a matriz em busca das bombas que foram encontradas,
       ou seja, se a mesma celula for uma bomba e estiver com uma bandeira
@@ -174,7 +158,7 @@ public class CampoMinado {
 
     //Metodo que organiza as funcoes quando game over
     public static void perdeu(Celula[][] campo) throws IOException, InterruptedException {
-        int opcaoSelec = 1;//Variavel para controlar o uso das cores junto com JNA
+        int opcaoSelec = 1;//Variavel para controlar o uso das cores junto com JNA e para redirecionamento
         limparConsole();
         Imprimir.fimDeJogo(campo);//Imprime "animacao" de game over
         tocarSom("sons\\boooooooooooo.wav");
@@ -202,7 +186,7 @@ public class CampoMinado {
                             limparConsole();
                             Imprimir.menuPerdeu(opcaoSelec);
                             break;
-                        case '\n':
+                        case '\n'://Caso enter redireciona para a opcao selecionada
                         case '\r':
                             redirecionarPraFuncoesFinais(opcaoSelec);
                         default:
@@ -212,10 +196,11 @@ public class CampoMinado {
         }
     }
 
+    //Metodo que organiza as funcoes quando ganha
     public static void ganhou() throws IOException {
-        int opcaoSelec = 1;
+        int opcaoSelec = 1;//Variavel para controlar o uso das cores junto com JNA e para redirecionamento
         limparConsole();
-        Imprimir.menuGanhou(opcaoSelec);
+        Imprimir.menuGanhou(opcaoSelec);//Imprime
         tocarSom("sons\\Aplusos.wav");
         tocarSom("sons\\makita.wav");
         while (true) {
@@ -295,14 +280,11 @@ public class CampoMinado {
         Celula.limparBombas(campo);
         Celula.definirBombas(campo, qtdBombas);
         Celula.definirBombasProximas(campo);
-        Celula.corrigirNumBombasProximas(campo);
-        Celula.definirBombasProximas(campo);
-        qtdBombas = Celula.corrigirQtdBombas(campo);
+        Celula.abrirCampo(campo);
+        Celula.abrirCelulasAdjacentes(campo);
 
-        int xCelulaAtual = definirPrimeriroX(campo);
+        int xCelulaAtual = campo.length / 2;
         int yCelulaAtual = (campo[0].length) / 2;
-
-        Celula.abrirCelulasVizinhas(xCelulaAtual, yCelulaAtual, campo);
 
         limparConsole();
         Imprimir.campoMinado(campo);
@@ -420,72 +402,71 @@ public class CampoMinado {
 
         try {
             while (true) {
-                if (!pressionouTecla()) {
-                    continue;
-                }
-                int ch = obtemTeclaPressionada();
+                if (pressionouTecla()) {
+                    int ch = obtemTeclaPressionada();
 
-                switch (ch) {
-                    case 'w':
-                    case 'W':
-                        opcaoSelec--;
-                        opcaoSelec = verificarOpSelecFim(opcaoSelec);
-                        limparConsole();
-                        Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
-                        break;
-
-                    case 's':
-                    case 'S':
-                        opcaoSelec++;
-                        opcaoSelec = verificarOpSelecFim(opcaoSelec);
-                        limparConsole();
-                        Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
-                        break;
-
-                    case 'a':
-                    case 'A':
-                        if (opcaoSelec == 1) {
-                            opTam--;
-                            opTam = verificarOpSelecFim(opTam);
-                            configTam = opTam;
+                    switch (ch) {
+                        case 'w':
+                        case 'W':
+                            opcaoSelec--;
+                            opcaoSelec = verificarOpSelecFim(opcaoSelec);
                             limparConsole();
                             Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
-                        } else if (opcaoSelec == 2) {
-                            opBombas--;
-                            opBombas = verificarOpBombas(opBombas);
-                            configBombas = opBombas;
+                            break;
+
+                        case 's':
+                        case 'S':
+                            opcaoSelec++;
+                            opcaoSelec = verificarOpSelecFim(opcaoSelec);
                             limparConsole();
                             Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
-                        }
-                        break;
+                            break;
 
-                    case 'd':
-                    case 'D':
-                        if (opcaoSelec == 1) {
-                            opTam++;
-                            opTam = verificarOpSelecFim(opTam);
-                            configTam = opTam;
-                            limparConsole();
-                            Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
-                        } else if (opcaoSelec == 2) {
-                            opBombas++;
-                            opBombas = verificarOpBombas(opBombas);
-                            configBombas = opBombas;
-                            limparConsole();
-                            Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
-                        }
-                        break;
+                        case 'a':
+                        case 'A':
+                            if (opcaoSelec == 1) {
+                                opTam--;
+                                opTam = verificarOpSelecFim(opTam);
+                                configTam = opTam;
+                                limparConsole();
+                                Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
+                            } else if (opcaoSelec == 2) {
+                                opBombas--;
+                                opBombas = verificarOpBombas(opBombas);
+                                configBombas = opBombas;
+                                limparConsole();
+                                Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
+                            }
+                            break;
 
-                    case '\n':
-                    case '\r':
-                        if (opcaoSelec == 3) {
-                            inicio(1);
-                            return;
-                        }
-                        break;
+                        case 'd':
+                        case 'D':
+                            if (opcaoSelec == 1) {
+                                opTam++;
+                                opTam = verificarOpSelecFim(opTam);
+                                configTam = opTam;
+                                limparConsole();
+                                Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
+                            } else if (opcaoSelec == 2) {
+                                opBombas++;
+                                opBombas = verificarOpBombas(opBombas);
+                                configBombas = opBombas;
+                                limparConsole();
+                                Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
+                            }
+                            break;
 
-                    default:
-                        break;
+                        case '\n':
+                        case '\r':
+                            if (opcaoSelec == 3) {
+                                inicio(1);
+                                return;
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
                 }
             }
         } catch (IOException e) {
