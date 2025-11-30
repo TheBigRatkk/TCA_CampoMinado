@@ -160,13 +160,18 @@ public class CampoMinado {
     }
 
     //Metodo que organiza as funcoes quando game over
-    public static void perdeu(Celula[][] campo) throws IOException, InterruptedException {
+    public static void perdeu(Celula[][] campo) {
         int opcaoSelec = 1;//Variavel para controlar o uso das cores junto com JNA e para redirecionamento
         limparConsole();
         Imprimir.fimDeJogo(campo);//Imprime "animacao" de game over
         tocarSom("sons\\boooooooooooo.wav");
         tocarSom("sons\\bomba.wav");
-        TimeUnit.SECONDS.sleep(3);//Paraliza o progrma por 3 segundos(igual o thread.sleep)
+        try {
+            Thread.sleep(3000);//Paraliza o progrma por 3 segundos
+        } catch (InterruptedException e) {
+            System.err.println("Não foi possível paralizar o programa");
+            e.printStackTrace();
+        }
         limparConsole();
         Imprimir.menuPerdeu(opcaoSelec);//imprime o menu de game over
         while (true) {
@@ -200,10 +205,11 @@ public class CampoMinado {
     }
 
     //Metodo que organiza as funcoes quando ganha
-    public static void ganhou() throws IOException {
-        int opcaoSelec = 1;//Variavel para controlar o uso das cores junto com JNA e para redirecionamento
+    //Quase a mesma coise do metodo perdeu()
+    public static void ganhou() {
+        int opcaoSelec = 1;
         limparConsole();
-        Imprimir.menuGanhou(opcaoSelec);//Imprime
+        Imprimir.menuGanhou(opcaoSelec);
         tocarSom("sons\\Aplusos.wav");
         tocarSom("sons\\makita.wav");
         while (true) {
@@ -235,7 +241,8 @@ public class CampoMinado {
         }
     }
 
-    public static void mostrarPontuacao() throws IOException {
+    //Metodo que mostra a pontuação do jogador
+    public static void mostrarPontuacao() {
         limparConsole();
         Imprimir.pontuacao(jogadorPontuacao);
         while(true) {
@@ -250,7 +257,8 @@ public class CampoMinado {
         }
     }
 
-    public static void redirecionarPraFuncoesFinais(int opcaoSelec) throws IOException {
+    //Metodo para processar o movimento com JNA e redirecionar para os metodos escolhidos
+    public static void redirecionarPraFuncoesFinais(int opcaoSelec){
         if (opcaoSelec == 1) {
             novoJogo();
         }
@@ -262,6 +270,7 @@ public class CampoMinado {
         }
     }
 
+    //Metodo para verifica o numero de bandeiras para não passar dos limites
     public static int verificarNumBandeiras(int totalBandeiras, int bandeiras) {
         if (bandeiras > totalBandeiras) {
             bandeiras = totalBandeiras;
@@ -271,31 +280,41 @@ public class CampoMinado {
         return bandeiras;
     }
 
-    public static void novoJogo() throws IOException {
-        int tamanho = 12;
+    public static int obterTamnhoCampo(int config) {
         if (configTam == 1) {
-            tamanho = 9;
+            return 9;
         }else if (configTam == 2) {
-            tamanho = 12;
+            return 12;
         }else if (configTam == 3) {
-            tamanho = 15;
+            return 15;
         }
+        return 12;
+    }
 
-        Celula[][] campo = new Celula[tamanho][tamanho];
-        int qtdBombas = configBombas;
-        int bandeiras = qtdBombas;
+    //Metodo que inicia um novo jogo
+    public static void novoJogo() {
+        //Obtem o tamanho do campo de acordo com o escolhido no menu de opções
+        int tamanho = obterTamnhoCampo(configTam);
+
+        Celula[][] campo = new Celula[tamanho][tamanho];//Cria a matriz
+        int qtdBombas = configBombas;//Configura a quantidade de bombas
+        int bandeiras = qtdBombas;//Configura a quantidade de bandeiras
+        //Variaveis para obter a pontuação
         int acertos = 0;
-        long tempoInicial = System.currentTimeMillis();
+        long tempoInicial = System.currentTimeMillis();//obtem o horário atual
         long fim;
         long tempoTotal;
 
-        Celula.criarCelulas(campo);
-        Celula.limparBombas(campo);
-        Celula.definirBombas(campo, qtdBombas);
-        Celula.definirBombasProximas(campo);
+        Celula.criarCelulas(campo);//cria as células do campo minado em si
+        Celula.limparBombas(campo);//Define todas as celulas como bomba == false
+        Celula.definirBombas(campo, qtdBombas);//Usa random para determinar onde terá bombas
+        Celula.definirBombasProximas(campo);//Baseado nas células bomba == true, determina os numeros que serão vistos
+        //Define as células (bomba == false && bombasProximas == 0) como foiAberto == true
         Celula.abrirCampo(campo);
+        //Define as células adjacentes as (bomba == false && bombasProximas == 0) como foiAberto == true
         Celula.abrirCelulasAdjacentes(campo);
 
+        //Define a posição inicial na matriz
         int xCelulaAtual = campo.length / 2;
         int yCelulaAtual = (campo[0].length) / 2;
 
@@ -308,20 +327,14 @@ public class CampoMinado {
                 tempoTotal = fim - tempoInicial;
                 int modficador = (int) (Math.random() * 10);
                 jogadorPontuacao = (int) ((acertos * modficador * 100000) / tempoTotal);
-                try {
-                    perdeu(campo);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                    System.err.println("Jogo interrompido: " + ie.getMessage());
-                }
+                perdeu(campo);
             }
             if (verificarSeGanhou(campo, qtdBombas) == true) {
                 fim = System.currentTimeMillis();
                 tempoTotal = fim - tempoInicial;
                 jogadorPontuacao = (int) ((acertos * 100000) / tempoTotal);
                 ganhou();
-            }
-            if (pressionouTecla()) {
+            }if (pressionouTecla()) {
                 int ch = obtemTeclaPressionada();
 
                 switch (ch) {
@@ -420,101 +433,91 @@ public class CampoMinado {
         limparConsole();
         Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
 
-        try {
-            while (true) {
-                if (pressionouTecla()) {
-                    int ch = obtemTeclaPressionada();
+        while (true) {
+            if (pressionouTecla()) {
+                int ch = obtemTeclaPressionada();
 
-                    switch (ch) {
-                        case 'w':
-                        case 'W':
-                            opcaoSelec--;
-                            opcaoSelec = verificarOpSelecFim(opcaoSelec);
+                switch (ch) {
+                    case 'w':
+                    case 'W':
+                        opcaoSelec--;
+                        opcaoSelec = verificarOpSelecFim(opcaoSelec);
+                        limparConsole();
+                        Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
+                        break;
+
+                    case 's':
+                    case 'S':
+                        opcaoSelec++;
+                        opcaoSelec = verificarOpSelecFim(opcaoSelec);
+                        limparConsole();
+                        Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
+                        break;
+
+                    case 'a':
+                    case 'A':
+                        if (opcaoSelec == 1) {
+                            opTam--;
+                            opTam = verificarOpSelecFim(opTam);
+                            configTam = opTam;
                             limparConsole();
                             Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
-                            break;
-
-                        case 's':
-                        case 'S':
-                            opcaoSelec++;
-                            opcaoSelec = verificarOpSelecFim(opcaoSelec);
+                        } else if (opcaoSelec == 2) {
+                            opBombas--;
+                            opBombas = verificarOpBombas(opBombas);
+                            configBombas = opBombas;
                             limparConsole();
                             Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
-                            break;
+                        }
+                        break;
 
-                        case 'a':
-                        case 'A':
-                            if (opcaoSelec == 1) {
-                                opTam--;
-                                opTam = verificarOpSelecFim(opTam);
-                                configTam = opTam;
-                                limparConsole();
-                                Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
-                            } else if (opcaoSelec == 2) {
-                                opBombas--;
-                                opBombas = verificarOpBombas(opBombas);
-                                configBombas = opBombas;
-                                limparConsole();
-                                Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
-                            }
-                            break;
+                    case 'd':
+                    case 'D':
+                        if (opcaoSelec == 1) {
+                            opTam++;
+                            opTam = verificarOpSelecFim(opTam);
+                            configTam = opTam;
+                            limparConsole();
+                            Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
+                        } else if (opcaoSelec == 2) {
+                            opBombas++;
+                            opBombas = verificarOpBombas(opBombas);
+                            configBombas = opBombas;
+                            limparConsole();
+                            Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
+                        }
+                        break;
 
-                        case 'd':
-                        case 'D':
-                            if (opcaoSelec == 1) {
-                                opTam++;
-                                opTam = verificarOpSelecFim(opTam);
-                                configTam = opTam;
-                                limparConsole();
-                                Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
-                            } else if (opcaoSelec == 2) {
-                                opBombas++;
-                                opBombas = verificarOpBombas(opBombas);
-                                configBombas = opBombas;
-                                limparConsole();
-                                Imprimir.menuOpçoes(opcaoSelec, opTam, opBombas);
-                            }
-                            break;
+                    case '\n':
+                    case '\r':
+                        if (opcaoSelec == 3) {
+                            inicio();
+                            return;
+                        }
+                        break;
 
-                        case '\n':
-                        case '\r':
-                            if (opcaoSelec == 3) {
-                                inicio();
-                                return;
-                            }
-                            break;
-
-                        default:
-                            break;
-                    }
+                    default:
+                        break;
                 }
             }
-        } catch (IOException e) {
-            System.err.println("Algo deu ruim :( " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
     public static void instrucoes() {
-        try {
-            limparConsole();
-            Imprimir.menuInstruções();
+        limparConsole();
+        Imprimir.menuInstruções();
 
-            while(true) {
-                if(pressionouTecla()) {
-                    int ch = obtemTeclaPressionada();
+        while(true) {
+            if(pressionouTecla()) {
+                int ch = obtemTeclaPressionada();
 
-                    if(ch == '\n' || ch == '\r') {
-                        inicio();
-                    }else {
-                        limparConsole();
-                        Imprimir.menuInstruções();
-                    }
+                if(ch == '\n' || ch == '\r') {
+                    inicio();
+                }else {
+                    limparConsole();
+                    Imprimir.menuInstruções();
                 }
             }
-        } catch (IOException e) {
-            System.err.println("Erro ao voltar ao menu inicial: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -536,7 +539,7 @@ public class CampoMinado {
         return opcaoSelec;
     }
 
-    public static void redirecionarPraFuncoesIniciais(int opcaoSelec) throws IOException {
+    public static void redirecionarPraFuncoesIniciais(int opcaoSelec) {
         if (opcaoSelec == 1) {
             novoJogo();
         }
@@ -551,7 +554,7 @@ public class CampoMinado {
         }
     }
 
-    public static void inicio() throws IOException {
+    public static void inicio() {
         int opcaoSelec = 1;
         limparConsole();
         Imprimir.menuInicial(opcaoSelec);
